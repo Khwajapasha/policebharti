@@ -1,12 +1,12 @@
-// import React from "react";
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
-
 import { Form, Col, Button, Container } from "react-bootstrap";
+import { string as yupString, object as yupObject } from "yup";
+import { useFormik } from "formik";
+
 const Home = () => {
   const [data, setData] = useState(new Date());
-  const [FirstName, setFirstName] = useState("");
-  const [MiddleName, setMiddleName] = useState("");
+  // const [MiddleName, setMiddleName] = useState("");
   const [LastName, setLastName] = useState("");
   const [EmailId, setEmailId] = useState("");
   const [MobileNumber, setMobileNumber] = useState("");
@@ -25,6 +25,16 @@ const Home = () => {
   const [OnClickButton, setOnClickButton] = useState("");
   const [CancelButton, setCancelButton] = useState("");
 
+  const validationSchema = yupObject().shape({
+    firstName: yupString().required("First Name is required"),
+    middleName: yupString().required("Middle Name is required"),
+  });
+
+  const formik = useFormik({
+    initialValues: {},
+    validationSchema,
+  });
+
   return (
     <div>
       <h1 className="text-center">Police Bharti Application Form 2020</h1>
@@ -34,16 +44,31 @@ const Home = () => {
             <Form.Group as={Col} controlId="firstName">
               <Form.Control
                 placeholder="First Name"
-                value={FirstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                value={formik.values.firstName}
+                onChange={(e) =>
+                  formik.setFieldValue("firstName", e.target.value)
+                }
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.firstName}
               />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.firstName}
+              </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group as={Col} controlId="middlename">
+            <Form.Group as={Col} controlId="middleName2">
               <Form.Control
+                id="middleName"
                 placeholder="Middle Name"
-                value={MiddleName}
-                onChange={(e) => setMiddleName(e.target.value)}
+                value={formik.values.middleName}
+                onChange={(e) =>
+                  formik.setFieldValue("middleName", e.target.value)
+                }
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.middleName}
               />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.middleName}
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group as={Col} controlId="lastName">
               <Form.Control
