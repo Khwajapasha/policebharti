@@ -6,7 +6,6 @@ import { useFormik } from "formik";
 
 const Home = () => {
   const [data, setData] = useState(new Date());
-  // const [MiddleName, setMiddleName] = useState("");
   const [LastName, setLastName] = useState("");
   const [EmailId, setEmailId] = useState("");
   const [MobileNumber, setMobileNumber] = useState("");
@@ -26,8 +25,11 @@ const Home = () => {
   const [CancelButton, setCancelButton] = useState("");
 
   const validationSchema = yupObject().shape({
-    firstName: yupString().required("First Name is required"),
-    middleName: yupString().required("Middle Name is required"),
+    firstName: yupString()
+      .min(3, "Too short")
+      .max(20, "Too long")
+      .required("First name is required"),
+    middleName: yupString().required("Middle name is required"),
   });
 
   const formik = useFormik({
@@ -45,15 +47,18 @@ const Home = () => {
               <Form.Control
                 placeholder="First Name"
                 value={formik.values.firstName}
+                maxLength={20}
                 onChange={(e) =>
                   formik.setFieldValue("firstName", e.target.value)
                 }
                 onBlur={formik.handleBlur}
-                isInvalid={formik.touched.firstName}
+                isInvalid={formik.touched.firstName && formik.errors.firstName}
               />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.firstName}
-              </Form.Control.Feedback>
+              {formik.touched.firstName && formik.errors.firstName && (
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.firstName}
+                </Form.Control.Feedback>
+              )}
             </Form.Group>
             <Form.Group as={Col} controlId="middleName2">
               <Form.Control
