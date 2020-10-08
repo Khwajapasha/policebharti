@@ -6,16 +6,16 @@ import { useFormik } from "formik";
 
 const Home = () => {
   const [data, setData] = useState(new Date());
-  const [LastName, setLastName] = useState("");
+  //const [LastName, setLastName] = useState("");
   const [EmailId, setEmailId] = useState("");
-  const [MobileNumber, setMobileNumber] = useState("");
-  const [Age, setAge] = useState("");
+  // const [MobileNumber, setMobileNumber] = useState("");
+  // const [Age, setAge] = useState("");
   const [Religion, setReligion] = useState("");
-  const [SelectHeight, setSelectHeight] = useState("");
-  const [SelectChest, setSelectChest] = useState("");
+  // const [SelectHeight, setSelectHeight] = useState("");
+  // const [SelectChest, setSelectChest] = useState("");
   const [Gender, setGender] = useState("");
   const [Nationality, setNationality] = useState("");
-  const [PermanantAddress, setPermanantAddress] = useState("");
+  // const [PermanantAddress, setPermanantAddress] = useState("");
   const [TemporaryAddress, setTemporaryAddress] = useState("");
   const [City, setCity] = useState("");
   const [State, setState] = useState("");
@@ -25,11 +25,28 @@ const Home = () => {
   const [CancelButton, setCancelButton] = useState("");
 
   const validationSchema = yupObject().shape({
-    firstName: yupString()
+    FirstName: yupString()
       .min(3, "Too short")
       .max(20, "Too long")
       .required("First name is required"),
-    middleName: yupString().required("Middle name is required"),
+    MiddleName: yupString()
+      .max(20, "Too long")
+      .required("Middle name is required"),
+    LastName: yupString()
+      .min(3, "Too short")
+
+      .required("Last name is required"),
+    MobileNumber: yupString()
+      .min(10, "Enter valid mobile number")
+      .required("Last name is required"),
+    Age: yupString().min(2, "Enter valid age").required("Age is required"),
+    Height: yupString()
+      .min(3, "Enter Height in centemeter")
+      .required("Height is required"),
+    Chest: yupString()
+      .min(2, "Enter Chest in centemeter")
+      .required("Chest is required"),
+    Address1: yupString().required("Permenant address is required"),
   });
 
   const formik = useFormik({
@@ -43,44 +60,58 @@ const Home = () => {
       <Container>
         <Form>
           <Form.Row>
-            <Form.Group as={Col} controlId="firstName">
+            <Form.Group as={Col} controlId="FirstName">
               <Form.Control
                 placeholder="First Name"
-                value={formik.values.firstName}
+                value={formik.values.FirstName}
                 maxLength={20}
                 onChange={(e) =>
-                  formik.setFieldValue("firstName", e.target.value)
+                  formik.setFieldValue("FirstName", e.target.value)
                 }
                 onBlur={formik.handleBlur}
-                isInvalid={formik.touched.firstName && formik.errors.firstName}
+                isInvalid={formik.touched.FirstName && formik.errors.FirstName}
               />
-              {formik.touched.firstName && formik.errors.firstName && (
+              {formik.touched.FirstName && formik.errors.FirstName && (
                 <Form.Control.Feedback type="invalid">
-                  {formik.errors.firstName}
+                  {formik.errors.FirstName}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
-            <Form.Group as={Col} controlId="middleName2">
+            <Form.Group as={Col} controlId="MiddleName">
               <Form.Control
-                id="middleName"
                 placeholder="Middle Name"
-                value={formik.values.middleName}
+                value={formik.values.MiddleName}
+                maxLength={20}
                 onChange={(e) =>
-                  formik.setFieldValue("middleName", e.target.value)
+                  formik.setFieldValue("MiddleName", e.target.value)
                 }
                 onBlur={formik.handleBlur}
-                isInvalid={formik.touched.middleName}
+                isInvalid={
+                  formik.touched.MiddleName && formik.errors.MiddleName
+                }
               />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.middleName}
-              </Form.Control.Feedback>
+              {formik.touched.MiddleName && formik.errors.MiddleName && (
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.MiddleName}
+                </Form.Control.Feedback>
+              )}
             </Form.Group>
-            <Form.Group as={Col} controlId="lastName">
+            <Form.Group as={Col} controlId="LastName">
               <Form.Control
                 placeholder="Last Name"
-                value={LastName}
-                onChange={(e) => setLastName(e.target.value)}
+                value={formik.values.LastName}
+                maxLength={20}
+                onChange={(e) =>
+                  formik.setFieldValue("LastName", e.target.value)
+                }
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.LastName && formik.errors.LastName}
               />
+              {formik.touched.LastName && formik.errors.LastName && (
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.LastName}
+                </Form.Control.Feedback>
+              )}
             </Form.Group>
           </Form.Row>
 
@@ -97,9 +128,21 @@ const Home = () => {
             <Form.Group as={Col} controlId="MobileNumber">
               <Form.Control
                 placeholder="Mobile Number"
-                value={MobileNumber}
-                onChange={(e) => setMobileNumber(e.target.value)}
+                value={formik.values.MobileNumber}
+                maxLength={13}
+                onChange={(e) =>
+                  formik.setFieldValue("MobileNumber", e.target.value)
+                }
+                onBlur={formik.handleBlur}
+                isInvalid={
+                  formik.touched.MobileNumber && formik.errors.MobileNumber
+                }
               />
+              {formik.touched.MobileNumber && formik.errors.MobileNumber && (
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.MobileNumber}
+                </Form.Control.Feedback>
+              )}
             </Form.Group>
           </Form.Row>
           <Form.Row>
@@ -114,12 +157,20 @@ const Home = () => {
             </Form.Group>
           </Form.Row>
           <Form.Row>
-            <Form.Group as={Col} controlId="formGridAge">
+            <Form.Group as={Col} controlId="Age">
               <Form.Control
                 placeholder="Age as on 1st January 2020"
-                value={Age}
-                onChange={(e) => setAge(e.target.value)}
+                value={formik.values.Age}
+                maxLength={2}
+                onChange={(e) => formik.setFieldValue("Age", e.target.value)}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.Age && formik.errors.Age}
               />
+              {formik.touched.Age && formik.errors.Age && (
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.Age}
+                </Form.Control.Feedback>
+              )}
             </Form.Group>
             <Form.Group as={Col} controlId="formGridreligion">
               <Form.Control
@@ -138,19 +189,35 @@ const Home = () => {
             </Form.Group>
           </Form.Row>
           <Form.Row>
-            <Form.Group as={Col} controlId="formGridHieght">
+            <Form.Group as={Col} controlId="Height">
               <Form.Control
-                placeholder="Hieght in cm"
-                value={SelectHeight}
-                onChange={(e) => setSelectHeight(e.target.value)}
+                placeholder="Height in cm"
+                value={formik.values.Height}
+                maxLength={3}
+                onChange={(e) => formik.setFieldValue("Height", e.target.value)}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.Height && formik.errors.Height}
               />
+              {formik.touched.Height && formik.errors.Height && (
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.Height}
+                </Form.Control.Feedback>
+              )}
             </Form.Group>
-            <Form.Group as={Col} controlId="formGridChest">
+            <Form.Group as={Col} controlId="Chest">
               <Form.Control
                 placeholder="Chest in cm"
-                value={SelectChest}
-                onChange={(e) => setSelectChest(e.target.value)}
+                value={formik.values.Chest}
+                maxLength={2}
+                onChange={(e) => formik.setFieldValue("Chest", e.target.value)}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.Chest && formik.errors.Chest}
               />
+              {formik.touched.Chest && formik.errors.Chest && (
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.Chest}
+                </Form.Control.Feedback>
+              )}
             </Form.Group>
             <Form.Group as={Col} controlId="formGridGender">
               <Form.Control
@@ -178,12 +245,20 @@ const Home = () => {
             </Form.Group>
           </Form.Row>
 
-          <Form.Group controlId="formGridAddress1">
+          <Form.Group controlId="Address1">
             <Form.Control
               placeholder="Permanant Address"
-              value={PermanantAddress}
-              onChange={(e) => setPermanantAddress(e.target.value)}
+              value={formik.values.Address1}
+              maxLength={160}
+              onChange={(e) => formik.setFieldValue("Address1", e.target.value)}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.Address1 && formik.errors.Address1}
             />
+            {formik.touched.Address1 && formik.errors.Address1 && (
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.Address1}
+              </Form.Control.Feedback>
+            )}
           </Form.Group>
 
           <Form.Group controlId="formGridAddress2">
