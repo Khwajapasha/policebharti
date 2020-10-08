@@ -5,17 +5,13 @@ import { string as yupString, object as yupObject } from "yup";
 import { useFormik } from "formik";
 
 const Home = () => {
-  const [data, setData] = useState(new Date());
-  //const [LastName, setLastName] = useState("");
-  const [EmailId, setEmailId] = useState("");
-  // const [MobileNumber, setMobileNumber] = useState("");
-  // const [Age, setAge] = useState("");
+  const [startdate, setStartDate] = useState(new Date());
+
   const [Religion, setReligion] = useState("");
-  // const [SelectHeight, setSelectHeight] = useState("");
-  // const [SelectChest, setSelectChest] = useState("");
+
   const [Gender, setGender] = useState("");
   const [Nationality, setNationality] = useState("");
-  // const [PermanantAddress, setPermanantAddress] = useState("");
+
   const [TemporaryAddress, setTemporaryAddress] = useState("");
   const [City, setCity] = useState("");
   const [State, setState] = useState("");
@@ -23,6 +19,7 @@ const Home = () => {
   const [CheckBox, setCheckBox] = useState("");
   const [OnClickButton, setOnClickButton] = useState("");
   const [CancelButton, setCancelButton] = useState("");
+  const phonenumber = /^[\+]?[(]?[0-9]{3}[)]?[-\s\]?[0-9]{3}[-\s\]?[0-9]{4,6}$/im;
 
   const validationSchema = yupObject().shape({
     FirstName: yupString()
@@ -38,15 +35,22 @@ const Home = () => {
       .required("Last name is required"),
     MobileNumber: yupString()
       .min(10, "Enter valid mobile number")
-      .required("Last name is required"),
+      .required("Phone number is required")
+      .matches(phonenumber, "Inter valid mobile number"),
     Age: yupString().min(2, "Enter valid age").required("Age is required"),
     Height: yupString()
-      .min(3, "Enter Height in centemeter")
-      .required("Height is required"),
+      .min(2, "Enter Height in centemeter")
+      .required("Height is required")
+      .matches(/^\d+$/, "Enter height in digit"),
     Chest: yupString()
-      .min(2, "Enter Chest in centemeter")
-      .required("Chest is required"),
+      .min(2, "Enter Height in centemeter")
+      .required("Height is required")
+      .matches(/^\d+$/, "Enter chest in digit"),
     Address1: yupString().required("Permenant address is required"),
+
+    EmailId: yupString()
+      .email("Enter valid E-mail address")
+      .required("E-mail address is required"),
   });
 
   const formik = useFormik({
@@ -116,17 +120,28 @@ const Home = () => {
           </Form.Row>
 
           <Form.Row>
-            <Form.Group as={Col} controlId="formGridEmail">
+            <Form.Group as={Col} controlId="EmailId">
               <Form.Control
                 type="email"
                 placeholder="Enter email"
-                value={EmailId}
-                onChange={(e) => setEmailId(e.target.value)}
+                value={formik.values.EmailId}
+                maxLength={60}
+                onChange={(e) =>
+                  formik.setFieldValue("EmailId", e.target.value)
+                }
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.EmailId && formik.errors.EmailId}
               />
+              {formik.touched.EmailId && formik.errors.EmailId && (
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.EmailId}
+                </Form.Control.Feedback>
+              )}
             </Form.Group>
 
             <Form.Group as={Col} controlId="MobileNumber">
               <Form.Control
+                type=""
                 placeholder="Mobile Number"
                 value={formik.values.MobileNumber}
                 maxLength={13}
@@ -146,13 +161,14 @@ const Home = () => {
             </Form.Group>
           </Form.Row>
           <Form.Row>
-            <Form.Group controlId="formGridDOB">
+            <Form.Group controlId="Date">
               <Form.Label as={Col}>Date Of Birth</Form.Label>
               <DatePicker
-                selected={data}
-                onChange={(date) => setData(date)}
+                selected={startdate}
+                onChange={(date) => setStartDate(date)}
                 showYearDropdown
                 showMonthDropdown
+                maxDate={new Date()}
               />
             </Form.Group>
           </Form.Row>
