@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
+import moment from "moment";
 import { Form, Col, Button, Container } from "react-bootstrap";
 import { string as yupString, object as yupObject } from "yup";
 import { useFormik } from "formik";
 
 const Home = () => {
-  const [startdate, setStartDate] = useState(new Date());
-
   const [Religion, setReligion] = useState("");
 
   const [Gender, setGender] = useState("");
@@ -51,6 +50,10 @@ const Home = () => {
     EmailId: yupString()
       .email("Enter valid E-mail address")
       .required("E-mail address is required"),
+
+    // DOB: yupString.test("DOB", "error message", (value) => {
+    //   return moment().diff(moment(value), "years") >= 18;
+    // }),
   });
 
   const formik = useFormik({
@@ -58,6 +61,10 @@ const Home = () => {
     validationSchema,
   });
 
+  useEffect(() => {
+    const diffYears = moment().diff(moment(formik.values.DOB), "years");
+    console.log("diffYears", diffYears);
+  }, [formik.values.DOB]);
   return (
     <div>
       <h1 className="text-center">Police Bharti Application Form 2020</h1>
@@ -162,31 +169,34 @@ const Home = () => {
           </Form.Row>
           <Form.Row>
             <Form.Group controlId="Date">
-              <Form.Label as={Col}>Date Of Birth</Form.Label>
+              <Form.Label
+                style={{ paddingRight: "10px" }}
+              >{`Date Of Birth :   `}</Form.Label>
               <DatePicker
-                selected={startdate}
-                onChange={(date) => setStartDate(date)}
+                id="DOB"
+                selected={formik.values.DOB}
+                className="form-control"
+                onChange={(date) => formik.setFieldValue("DOB", date)}
                 showYearDropdown
                 showMonthDropdown
                 maxDate={new Date()}
-              />
-            </Form.Group>
-          </Form.Row>
-          <Form.Row>
-            <Form.Group as={Col} controlId="Age">
-              <Form.Control
-                placeholder="Age as on 1st January 2020"
-                value={formik.values.Age}
-                maxLength={2}
-                onChange={(e) => formik.setFieldValue("Age", e.target.value)}
                 onBlur={formik.handleBlur}
-                isInvalid={formik.touched.Age && formik.errors.Age}
               />
-              {formik.touched.Age && formik.errors.Age && (
-                <Form.Control.Feedback type="invalid">
-                  {formik.errors.Age}
-                </Form.Control.Feedback>
-              )}
+
+              {formik.values.DOB &&
+                moment().diff(moment(formik.values.DOB), "years") < 18 && (
+                  <React.Fragment>
+                    <br />
+                    <small class="text-danger">Age should above 18</small>
+                  </React.Fragment>
+                )}
+              {formik.values.DOB &&
+                moment().diff(moment(formik.values.DOB), "years") > 30 && (
+                  <React.Fragment>
+                    <br />
+                    <small class="text-danger">Age should below 30</small>
+                  </React.Fragment>
+                )}
             </Form.Group>
             <Form.Group as={Col} controlId="formGridreligion">
               <Form.Control
